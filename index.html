@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sharenest – Borrow what you need from your own community</title>
+<meta name="description" content="Sharenest lets verified community members post a request for an item they need, and neighbours, classmates or colleagues who own it can choose to lend it. Join the waitlist.">
+<!-- TODO: replace https://YOURDOMAIN with the real domain after deployment (needed for the social preview image) -->
+<link rel="canonical" href="https://YOURDOMAIN/">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sharenest – Nurturing community">
+<meta property="og:description" content="Post what you need. Verified community members who own it can lend it.">
+<meta property="og:image" content="https://YOURDOMAIN/social-preview.jpg">
+<meta property="og:url" content="https://YOURDOMAIN/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#080c39">
+<script>
+/* Splash screen flag: show once per browser session, skip if the visitor prefers reduced motion */
+try{if(!sessionStorage.getItem('sn_splash')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('has-splash');}}catch(e){}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#080c39; --navy-2:#111a55; --ink:#0c1240; --text:#2a3160;
+  --cyan:#22d3ee; --cyan-ink:#0a6f84; --orange:#f9a826; --green:#7bc62d; --blue:#2b9de0; --magenta:#b23cab;
+  --light:#f4f7ff; --line:#dde3f5; --white:#fff;
+  --font:"Nunito","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;font-family:var(--font);color:var(--text);background:var(--white);line-height:1.6;font-size:1.0625rem}
+img{max-width:100%;height:auto}
+a{color:var(--cyan-ink)}
+h1,h2,h3{font-family:var(--font);color:var(--ink);line-height:1.12;margin:0 0 .5em;letter-spacing:-.01em}
+h1{font-size:clamp(2.4rem,6vw,4rem);font-weight:900}
+h2{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800}
+h3{font-size:1.2rem;font-weight:800}
+p{margin:0 0 1em;max-width:62ch}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--orange);color:var(--navy);padding:.6em 1em;border-radius:8px;font-weight:800;z-index:100}
+.skip:focus{left:8px}
+.wrap{width:min(1120px,100% - 2.5rem);margin-inline:auto}
+section{padding:clamp(3.5rem,8vw,6rem) 0}
+
+/* splash screen */
+.splash{display:none;position:fixed;inset:0;z-index:200;background:var(--navy);flex-direction:column;align-items:center;justify-content:center;gap:1.6rem;padding:1rem;transition:opacity .6s ease,visibility .6s}
+.has-splash .splash{display:flex}
+.has-splash body{overflow:hidden}
+.has-splash .flow .msg{animation-play-state:paused}
+.splash.out{opacity:0;visibility:hidden}
+.splash img{width:min(520px,80vw);height:auto;animation:pop .9s cubic-bezier(.2,.8,.2,1) both}
+.splash .load{width:min(260px,60vw);height:6px;border-radius:6px;background:rgba(255,255,255,.14);overflow:hidden}
+.splash .load i{display:block;height:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,var(--blue) 0 33%,var(--green) 33% 66%,var(--magenta) 66%);animation:fill 1.9s ease .2s forwards}
+.splash button{background:none;border:0;color:#b8c4f0;font:700 .95rem var(--font);text-decoration:underline;cursor:pointer;padding:.4em .8em}
+.splash button:hover{color:var(--cyan)}
+@keyframes pop{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:none}}
+@keyframes fill{to{transform:scaleX(1)}}
+
+/* header */
+header.site{position:sticky;top:0;z-index:50;background:rgba(8,12,57,.96);backdrop-filter:blur(8px);border-bottom:1px solid rgba(34,211,238,.25)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:68px}
+.brand{display:flex;align-items:center;gap:.6rem;color:#fff;text-decoration:none;font-weight:900;font-size:1.3rem}
+.brand img{width:40px;height:40px;object-fit:contain}
+nav ul{display:flex;gap:1.4rem;list-style:none;margin:0;padding:0;align-items:center}
+nav a{color:#dfe6ff;text-decoration:none;font-weight:700}
+nav a:hover{color:var(--cyan)}
+.btn{display:inline-block;background:var(--orange);color:var(--navy);font:800 1rem var(--font);padding:.85em 1.5em;border-radius:999px;border:0;text-decoration:none;cursor:pointer;transition:transform .15s,background .15s}
+.btn:hover{background:#ffbb4d;transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:#fff;border:2px solid var(--cyan)}
+.btn.ghost:hover{background:rgba(34,211,238,.15)}
+nav .btn{padding:.55em 1.1em;color:var(--navy)}
+nav a.btn:hover{color:var(--navy)}
+
+/* hero */
+.hero{background:var(--navy);color:#cfd8ff;padding-block:clamp(3rem,7vw,5.5rem)}
+.hero h1{color:#fff}
+.hero p.lead{font-size:1.2rem;color:#cfd8ff}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
+.cta-row{display:flex;flex-wrap:wrap;gap:.9rem;margin-top:1.6rem}
+.rainbow{height:6px;border-radius:6px;background:linear-gradient(90deg,var(--blue) 0 33%,var(--green) 33% 66%,var(--magenta) 66%);width:96px;margin-bottom:1.4rem}
+
+/* request -> offer -> agreed demo (the one animated moment) */
+.flow{background:var(--navy-2);border:1px solid rgba(34,211,238,.35);border-radius:20px;padding:1.2rem;display:grid;gap:.9rem}
+.flow .cap{margin:0;color:#9fb0ee;font-size:.9rem}
+.msg{border-radius:14px;padding:.9rem 1rem;max-width:none}
+.msg b{display:block;font-size:.85rem;margin-bottom:.2rem}
+.msg p{margin:0;max-width:none}
+.m-req{background:#fff;color:var(--ink)}
+.m-req b{color:var(--cyan-ink)}
+.m-off{background:#e8fbd1;color:#1d3a05;margin-left:1.5rem}
+.m-ok{background:var(--orange);color:var(--navy);font-weight:800}
+.flow .msg{opacity:0;transform:translateY(10px);animation:in .5s ease forwards}
+.flow .m-req{animation-delay:.3s}.flow .m-off{animation-delay:1.6s}.flow .m-ok{animation-delay:2.9s}
+@keyframes in{to{opacity:1;transform:none}}
+
+/* problem */
+.problem{background:var(--light)}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin-top:2rem}
+.cols3 article{border-top:5px solid var(--blue);padding-top:1rem}
+.cols3 article:nth-child(2){border-color:var(--green)}
+.cols3 article:nth-child(3){border-color:var(--magenta)}
+.cols3 p{margin:0}
+
+/* steps */
+.steps{list-style:none;counter-reset:s;margin:2rem 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem}
+.steps li{counter-increment:s;background:var(--white);border:2px solid var(--line);border-radius:18px;padding:1.3rem}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:2.2rem;height:2.2rem;border-radius:50%;background:var(--navy);color:var(--cyan);font-weight:900;margin-bottom:.8rem}
+.steps p{margin:0}
+
+/* features */
+.features{background:var(--light)}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;margin-top:2rem}
+.feat-list{display:grid;gap:1.1rem}
+.feat-list div{padding-left:1rem;border-left:5px solid var(--cyan)}
+.feat-list div:nth-child(2){border-color:var(--orange)}.feat-list div:nth-child(3){border-color:var(--green)}
+.feat-list div:nth-child(4){border-color:var(--blue)}.feat-list div:nth-child(5){border-color:var(--magenta)}.feat-list div:nth-child(6){border-color:var(--orange)}
+.feat-list h3{margin:0 0 .2rem}.feat-list p{margin:0}
+figure{margin:0}
+.mock{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:1rem;display:grid;gap:.8rem;box-shadow:0 18px 40px rgba(8,12,57,.12)}
+.mock .tag{font-size:.8rem;font-weight:800;color:var(--cyan-ink)}
+.rq{border:1px solid var(--line);border-radius:14px;padding:.9rem 1rem}
+.rq h4{margin:.1rem 0 .3rem;color:var(--ink);font-size:1.05rem}
+.rq p{margin:0;font-size:.95rem}
+.rq .meta{display:flex;justify-content:space-between;margin-top:.6rem;font-size:.85rem;font-weight:700;color:var(--cyan-ink)}
+figcaption{font-size:.9rem;margin-top:.7rem;color:#555e8c}
+
+/* team */
+.team{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.2rem;margin-top:2rem;list-style:none;padding:0}
+.team li{border:2px solid var(--line);border-radius:18px;padding:1.2rem;text-align:center}
+.av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;margin:0 auto .8rem;font-weight:900;color:var(--navy);font-size:1.2rem}
+.team b{display:block;color:var(--ink)}
+.team span{font-size:.95rem}
+
+/* waitlist */
+.join{background:var(--navy);color:#cfd8ff}
+.join h2{color:#fff}
+.join-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+form{background:var(--white);color:var(--text);border-radius:20px;padding:1.6rem;display:grid;gap:1rem}
+label{font-weight:800;color:var(--ink);display:block;margin-bottom:.3rem}
+input[type=text],input[type=email],select{width:100%;font:inherit;padding:.75em .9em;border:2px solid #b9c3e6;border-radius:10px;color:var(--ink);background:#fff}
+.check{display:flex;gap:.6rem;align-items:flex-start;font-size:.95rem}
+.check input{margin-top:.35rem;width:1.1rem;height:1.1rem}
+.check label{font-weight:600;margin:0}
+.hp{position:absolute;left:-9999px}
+#status{margin:0;font-weight:700;min-height:1.5em}
+#status.ok{color:#1b6b2b}#status.err{color:#a3261b}
+.privacy{font-size:.92rem;margin-top:1.4rem;color:#b8c4f0}
+.privacy a{color:var(--cyan)}
+
+/* footer */
+footer{background:#050826;color:#b8c4f0;padding:2.5rem 0}
+.foot{display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;align-items:flex-start}
+footer a{color:var(--cyan)}
+footer p{margin:.2rem 0;max-width:none}
+.social{list-style:none;padding:0;margin:.4rem 0 0;display:flex;gap:1rem}
+
+@media (max-width:860px){
+  .hero-grid,.feat-grid,.join-grid{grid-template-columns:1fr}
+  .cols3{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  nav li:not(:last-child){display:none}
+}
+@media (max-width:520px){.steps{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .flow .msg{animation:none;opacity:1;transform:none}
+  .btn{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="splash" id="splash">
+  <img src="sharenest-logo.jpg" alt="Sharenest – Nurturing community" width="900" height="715">
+  <div class="load" aria-hidden="true"><i></i></div>
+  <button type="button" id="splash-skip">Skip intro</button>
+</div>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="Sharenest home"><img src="sharenest-emblem.png" alt="">Sharenest</a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a class="btn" href="#waitlist">Join the waitlist</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="rainbow" aria-hidden="true"></div>
+        <h1>Need it for a day? Ask your community.</h1>
+        <p class="lead">Sharenest is a borrowing platform for verified communities. Post what you need, and the classmates, neighbours or colleagues who already own it can choose to lend it.</p>
+        <div class="cta-row">
+          <a class="btn" href="#waitlist">Join the waitlist</a>
+          <a class="btn ghost" href="#how">See how it works</a>
+        </div>
+      </div>
+      <div class="flow" role="img" aria-label="Example: a student posts a request for a calculator, another student offers hers, and they agree the terms.">
+        <p class="cap">Example request</p>
+        <div class="msg m-req"><b>Mala posts a request</b><p>Need a scientific calculator for my maths exam, for one day. Library handover is fine.</p></div>
+        <div class="msg m-off"><b>Vimala offers hers</b><p>I have one. Free to borrow, collect from the library on Friday.</p></div>
+        <div class="msg m-ok">Agreed: Friday to Saturday, free. Return reminder set.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="problem" id="problem">
+    <div class="wrap">
+      <h2>People buy things they only need once</h2>
+      <p>Someone in your community probably owns what you need. The hard part is finding them, asking, and agreeing on terms.</p>
+      <div class="cols3">
+        <article><h3>You don't know who has it</h3><p>Borrowing usually depends on people you already know, so many people end up buying instead.</p></article>
+        <article><h3>Informal lending is fragile</h3><p>Return dates, item condition and who pays for damage are rarely agreed, which leads to misunderstandings.</p></article>
+        <article><h3>Open marketplaces don't fit</h3><p>They help you find items listed for rent. They don't let you ask one trusted community for something specific.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <h2>How Sharenest works</h2>
+      <p>Owners never have to list their belongings. They only respond when a request matches something they have and are happy to lend.</p>
+      <ol class="steps">
+        <li><h3>Post a request</h3><p>Say what you need, when, for how long, and where you can collect it.</p></li>
+        <li><h3>Owners respond</h3><p>Eligible members of your community or group are notified and can offer to lend.</p></li>
+        <li><h3>Agree the terms</h3><p>Choose an offer, then both of you confirm the dates, handover and any lending fee.</p></li>
+        <li><h3>Return and review</h3><p>Confirm the return, then leave feedback tied to the real transaction.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="wrap">
+      <h2>Built for trust inside a community</h2>
+      <div class="feat-grid">
+        <div class="feat-list">
+          <div><h3>Verified communities</h3><p>Access is limited to approved members of a university, hostel, apartment block or workplace.</p></div>
+          <div><h3>Request-first borrowing</h3><p>Ask for what you need instead of searching through listings.</p></div>
+          <div><h3>Voluntary lending</h3><p>Owners respond only when they have the item and are willing. No obligation.</p></div>
+          <div><h3>Borrowing agreements</h3><p>Dates, handover details and any fee are recorded and confirmed by both people.</p></div>
+          <div><h3>Condition records</h3><p>Note the item's condition at handover and return, with photos if needed.</p></div>
+          <div><h3>Privacy and accountability</h3><p>Control who sees your requests, keep contact details protected, and report problems.</p></div>
+        </div>
+        <figure>
+          <div class="mock" role="img" aria-label="Preview of two borrowing requests in the Sharenest prototype: a calculator and a camera, each showing the number of offers received.">
+            <span class="tag">Prototype preview · demo data</span>
+            <div class="rq"><h4>Scientific calculator</h4><p>Study essentials · needed tomorrow for 2 days</p><div class="meta"><span>Free preferred</span><span>2 offers</span></div></div>
+            <div class="rq"><h4>DSLR camera for a short film</h4><p>Electronics · needed for 3 days</p><div class="meta"><span>Up to Rs. 1,500</span><span>1 offer</span></div></div>
+            <div class="rq"><h4>Badminton racket</h4><p>Sports &amp; outdoors · needed Friday for 1 day</p><div class="meta"><span>Free</span><span>No offers yet</span></div></div>
+          </div>
+          <!-- TODO: replace the .mock block with real screenshots from the Figma prototype, e.g.
+               <img src="prototype-requests.png" alt="Sharenest prototype showing the list of open borrowing requests"> -->
+          <figcaption>Early prototype. Final screenshots will replace this preview.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="wrap">
+      <h2>Team CS-30</h2>
+      <p>We are second-year students at the Informatics Institute of Technology (IIT), building Sharenest for our Agile Team Project.</p>
+      <ul class="team">
+        <li><div class="av" style="background:var(--cyan)" aria-hidden="true">RJ</div><b>Ragavika Jeganathan</b></li>
+        <li><div class="av" style="background:var(--orange)" aria-hidden="true">MS</div><b>Mithunya Sashikaran</b></li>
+        <li><div class="av" style="background:var(--green)" aria-hidden="true">EG</div><b>Evanjan Gabriel</b></li>
+        <li><div class="av" style="background:#6fb8f0" aria-hidden="true">AH</div><b>Abbadh Hasan</b></li>
+        <li><div class="av" style="background:#e08ad9" aria-hidden="true">AF</div><b>Abdul Rahman Fawzer</b></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="join" id="waitlist">
+    <div class="wrap join-grid">
+      <div>
+        <h2>Be first to try Sharenest</h2>
+        <p>Join the waitlist and we'll email you when Sharenest opens for your community. We'll only use your details to contact you about Sharenest.</p>
+        <p class="privacy" id="privacy"><strong>Privacy notice.</strong> We collect your name, email address and the type of community you belong to. They are used only to contact you about Sharenest's launch and are stored by our form provider. Handling follows Sri Lanka's Personal Data Protection Act No. 9 of 2022. To see, correct or delete your details, email <a href="mailto:hello.sharenest@gmail.com">hello.sharenest@gmail.com</a>.</p>
+      </div>
+      <!-- TODO: replace the action URL with your Formspree endpoint (https://formspree.io) or another form service -->
+      <form id="waitlist-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
+        <div><label for="name">Name</label><input type="text" id="name" name="name" autocomplete="name" required></div>
+        <div><label for="email">Email address</label><input type="email" id="email" name="email" autocomplete="email" required></div>
+        <div>
+          <label for="community">Which community would you use it in?</label>
+          <select id="community" name="community">
+            <option value="">Choose one (optional)</option>
+            <option>University</option><option>Student accommodation</option><option>Apartment or residential</option><option>Workplace</option><option>Other</option>
+          </select>
+        </div>
+        <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="check"><input type="checkbox" id="consent" name="consent" required><label for="consent">I agree to be contacted about Sharenest, as described in the <a href="#privacy">privacy notice</a>.</label></div>
+        <button class="btn" type="submit">Join the waitlist</button>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <p><strong style="color:#fff">Sharenest</strong> · Nurturing community</p>
+      <p>Team CS-30 · Agile Team Project, IIT / University of Westminster</p>
+      <p>© <span id="yr">2026</span> Sharenest</p>
+    </div>
+    <div>
+      <p>Contact: <a href="mailto:hello.sharenest@gmail.com">hello.sharenest@gmail.com</a></p>
+      <p id="social-label">Follow us</p>
+      <!-- TODO: add social links, e.g. <li><a href="https://instagram.com/yourhandle" rel="noopener">Instagram</a></li> -->
+      <ul class="social" aria-labelledby="social-label"><li>Social links coming soon</li></ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  var root = document.documentElement, sp = document.getElementById('splash');
+  if (sp && root.classList.contains('has-splash')) {
+    var skip = document.getElementById('splash-skip');
+    var done = function () {
+      if (sp.classList.contains('out')) return;
+      sp.classList.add('out');
+      try { sessionStorage.setItem('sn_splash', '1'); } catch (e) {}
+      setTimeout(function () { root.classList.remove('has-splash'); sp.remove(); }, 650);
+    };
+    skip.addEventListener('click', done);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') done(); });
+    skip.focus();
+    setTimeout(done, 2400);
+  } else if (sp) { sp.remove(); }
+
+  var form = document.getElementById('waitlist-form');
+  var status = document.getElementById('status');
+  function say(msg, cls) { status.textContent = msg; status.className = cls; }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (form.website.value) return; // honeypot: bots fill this in
+    if (!form.name.value.trim()) { say('Enter your name.', 'err'); form.name.focus(); return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email.value)) { say('Enter a valid email address.', 'err'); form.email.focus(); return; }
+    if (!form.consent.checked) { say('Tick the box to agree to be contacted.', 'err'); form.consent.focus(); return; }
+    if (form.action.indexOf('YOUR_FORM_ID') !== -1) { say('The form is not connected yet. Add your form endpoint in index.html.', 'err'); return; }
+
+    say('Sending…', '');
+    fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } })
+      .then(function (r) {
+        if (!r.ok) throw new Error('Request failed');
+        form.reset();
+        say('You are on the list. Thank you!', 'ok');
+      })
+      .catch(function () { say('Something went wrong. Try again, or email hello.sharenest@gmail.com.', 'err'); });
+  });
+})();
+</script>
+</body>
+</html>
